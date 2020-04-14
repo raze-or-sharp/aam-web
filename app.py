@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xldgewakwrsnui:340c954698e497f612a85be9a7fd0c5e14f485c8a60debc3b" \
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://xldgewakwrsnui:340c954698e497f612a85be9a7fd0c5e14f485c8a60debc3b" \
                                         "9fb542a9f6ab24c@ec2-50-17-21-170.compute-1.amazonaws.com:5432/dap46s0s0pgc91"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app)
 
 
@@ -24,12 +24,12 @@ def override_url_for():
 
 
 def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename', None)
+    if endpoint == "static":
+        filename = values.get("filename", None)
         if filename:
             file_path = os.path.join(app.root_path,
                                      endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
+            values["q"] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
 
@@ -53,16 +53,16 @@ def index():
         return render_template("index.html", students=students)
 
 
-@app.route('/delete/<int:id>')
+@app.route("/delete/<int:id>")
 def delete(id):
     student_to_delete = Student.query.get_or_404(id)
 
     try:
         db.session.delete(student_to_delete)
         db.session.commit()
-        return redirect('/')
+        return redirect("/")
     except:
-        return 'FFS CANT DELET'
+        return "An exception occurred during deletion."
 
 
 if __name__ == "__main__":
