@@ -3,8 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://xldgewakwrsnui:340c954698e497f612a85be9a7fd0c5e14f485c8a60debc3b" \
-                                        "9fb542a9f6ab24c@ec2-50-17-21-170.compute-1.amazonaws.com:5432/dap46s0s0pgc91"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app)
 
@@ -15,7 +14,7 @@ class Student(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
-        return "<Task {}>".format(self.student_id)
+        return "<Student {}>".format(self.student_id)
 
 
 @app.context_processor
@@ -46,7 +45,7 @@ def index():
             db.session.commit()
             return redirect("/")
         except:
-            return "FML DB FAILED"
+            return "An exception occurred during retrieval."
 
     else:
         students = Student.query.order_by(Student.last_name).all()
